@@ -114,9 +114,13 @@
         lessorName: "Mr. Sunil Kapoor",
         lessorSonOf: "Shri Kewal Krishan Kapoor",
         lessorAddress: "Plot No.11, Industrial Area, Upmohal Parwanoo Sector-III, Solan Himachal Pradesh-173220",
+        lessorIdType: "Aadhar Card",
+        lessorIdNumber: "1234 5678 9012",
         lesseeName: "Mr. Tarun Mandhok",
         lesseeSonOf: "",
         lesseeAddress: "",
+        lesseeIdType: "Aadhar Card",
+        lesseeIdNumber: "",
         premisesAddress: "House No. E-384, Basement, Greater Kailash Part-I, New Delhi-110048",
         leaseStartDate: formattedDate,
         leaseTermMonths: 36,
@@ -150,6 +154,15 @@
           )}
         </div>
       );
+      
+      const SelectField = ({ label, name, value, onChange, options, fullWidth = false }) => (
+        <div className={fullWidth ? 'sm:col-span-2' : ''}>
+          <label htmlFor={name} className="block text-sm font-medium text-slate-600 mb-1">{label}</label>
+          <select id={name} name={name} value={value} onChange={onChange} className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm transition">
+            {options.map(option => <option key={option} value={option}>{option}</option>)}
+          </select>
+        </div>
+      );
 
       const AgreementForm = ({ data, setData }) => {
         const handleChange = (e) => {
@@ -169,6 +182,8 @@
           }));
         };
 
+        const idProofOptions = ['Aadhar Card', 'PAN Card', 'Passport', 'Driving License'];
+
         return (
           <div className="space-y-6">
             <FormSection title="Agreement Details">
@@ -179,12 +194,16 @@
             <FormSection title="Lessor (Landlord) Details">
               <InputField label="Lessor Name" name="lessorName" value={data.lessorName} onChange={handleChange} />
               <InputField label="S/o (Son of)" name="lessorSonOf" value={data.lessorSonOf} onChange={handleChange} />
+              <SelectField label="ID Proof Type" name="lessorIdType" value={data.lessorIdType} onChange={handleChange} options={idProofOptions} />
+              <InputField label="ID Proof Number" name="lessorIdNumber" value={data.lessorIdNumber} onChange={handleChange} />
               <InputField label="Lessor Address" name="lessorAddress" value={data.lessorAddress} onChange={handleChange} fullWidth isTextArea />
             </FormSection>
 
             <FormSection title="Lessee (Tenant) Details">
               <InputField label="Lessee Name" name="lesseeName" value={data.lesseeName} onChange={handleChange} />
               <InputField label="S/o (Son of)" name="lesseeSonOf" value={data.lesseeSonOf} onChange={handleChange} />
+              <SelectField label="ID Proof Type" name="lesseeIdType" value={data.lesseeIdType} onChange={handleChange} options={idProofOptions} />
+              <InputField label="ID Proof Number" name="lesseeIdNumber" value={data.lesseeIdNumber} onChange={handleChange} />
               <InputField label="Lessee Address" name="lesseeAddress" value={data.lesseeAddress} onChange={handleChange} fullWidth isTextArea />
             </FormSection>
 
@@ -245,12 +264,18 @@
             <p className="text-center font-bold my-4">BETWEEN</p>
             <div className="mb-6">
               <p><strong>{data.lessorName}</strong>, S/o {data.lessorSonOf}, R/o {data.lessorAddress}.</p>
-              <p className="font-semibold">(Hereinafter called the "LESSOR" which expression shall wherever the context so permits and requires mean to include him/his legal heirs, successors, legal representatives, executors, nominees and assignees of the One Part).</p>
+              <div className="mt-2 text-base space-y-1">
+                {data.lessorIdNumber && <p><strong>{data.lessorIdType} No:</strong> {data.lessorIdNumber}</p>}
+              </div>
+              <p className="font-semibold mt-2">(Hereinafter called the "LESSOR" which expression shall wherever the context so permits and requires mean to include him/his legal heirs, successors, legal representatives, executors, nominees and assignees of the One Part).</p>
             </div>
             <p className="text-center font-bold my-4">AND</p>
             <div className="mb-8">
               <p><strong>{data.lesseeName}</strong>{data.lesseeSonOf && `, S/o ${data.lesseeSonOf}`}{data.lesseeAddress && `, R/o ${data.lesseeAddress}`}.</p>
-              <p className="font-semibold">(Hereinafter called the "LESSEE" which expression shall wherever the context so permits and requires mean to include its successors, legal representatives, executors, nominees, and assignees of the Other Part).</p>
+              <div className="mt-2 text-base space-y-1">
+                {data.lesseeIdNumber && <p><strong>{data.lesseeIdType} No:</strong> {data.lesseeIdNumber}</p>}
+              </div>
+              <p className="font-semibold mt-2">(Hereinafter called the "LESSEE" which expression shall wherever the context so permits and requires mean to include its successors, legal representatives, executors, nominees, and assignees of the Other Part).</p>
             </div>
             <p className="mb-4">WHEREAS the Lessor is the owner and in physical possession of House No. <strong>{data.premisesAddress}</strong> (hereinafter called the "Said Leased Premises") and has agreed to let out the same to the Lessee.</p>
             <p className="mb-4">And the Lessee after seeing all the necessary and relevant documents of the Lessor, has accepted the Lessor as Owner in respect of the Said Leased Premises and it has also undertaken to pay the monthly rent as agreed regularly without any delay or any objection of any kind whatsoever.</p>
